@@ -50,7 +50,7 @@ def train_RBM(rbm, epochs = 2001, batch_size=4, learning_rate = 1e-1, ds=BinaryA
 
         errors = np.array(errors).mean()
             
-        if epoch%10==0:
+        if epoch%100==0:
             print(f"Epoch {epoch+1} - Reconstruction error: {errors}")
 
 def generer_image_RBM(rbm, num_iterations, num_images):
