@@ -23,11 +23,12 @@ def sortie_entree_RBM(rbm, output):
     input = 1.0 / (1.0 + np.exp(-input))
     return input
 
-def train_RBM(rbm, epochs = 2001, batch_size=4, learning_rate = 1e-3, ds=BinaryAlphaDigitsDataset()):
+def train_RBM(rbm, epochs = 2001, batch_size=4, learning_rate = 1e-1, ds=BinaryAlphaDigitsDataset()):
     for epoch in range(epochs):
         errors = []
         for batch in DataLoader(ds, batch_size=batch_size, shuffle=True):
-            batch = batch['data'].numpy().reshape(-1, 320)
+            batch = batch['data'].numpy()
+            batch = batch.reshape(batch.shape[0], -1)
             
             output_probs = entree_sortie_RBM(rbm, batch)
             output_hidden_states = np.random.binomial(n=1, p=output_probs)
@@ -54,9 +55,11 @@ def train_RBM(rbm, epochs = 2001, batch_size=4, learning_rate = 1e-3, ds=BinaryA
 
 def generer_image_RBM(rbm, num_iterations, num_images):
     for i in range(num_images):
-        v = np.random.rand(rbm['a'].shape[1])
+        v = np.random.binomial(1, 0.5, size=rbm['a'].shape[1])#(rbm['a'].shape[1])
         for j in range(num_iterations):
             h = entree_sortie_RBM(rbm, v)
+            h = np.random.binomial(n=1, p=h)
             v = sortie_entree_RBM(rbm, h)
-        plt.imshow(v.reshape(16, 20), cmap='gray')
+            v = np.random.binomial(n=1, p=v)
+        plt.imshow(v.reshape(20, 16), cmap='gray')
         plt.show()
