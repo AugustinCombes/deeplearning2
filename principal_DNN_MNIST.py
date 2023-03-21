@@ -31,12 +31,13 @@ def entree_sortie_reseau(dnn, input):
 
 def pretrain_DNN(dnn, num_iterations, learning_rate, batch_size, ds):
     sub_dbn = dnn[:-1]
-    sub_dbn = train_DBN(sub_dbn, num_iterations, learning_rate, batch_size, ds)
+    sub_dbn = train_DBN(sub_dbn, num_iterations,
+                        learning_rate, batch_size, ds, print_every=1)
     dnn = sub_dbn + dnn[-1:]
     return dnn
 
 
-def retropropagation(dnn, num_iterations, learning_rate, batch_size, ds):
+def retropropagation(dnn, num_iterations, learning_rate, batch_size, ds, print_every=1):
     for epoch in range(num_iterations):
         epoch_loss = []
         for batch in DataLoader(ds, batch_size=batch_size, shuffle=True, drop_last=True):
@@ -83,7 +84,7 @@ def retropropagation(dnn, num_iterations, learning_rate, batch_size, ds):
 
         epoch_loss = np.mean(epoch_loss)
 
-        if epoch % 20 == 0:
+        if epoch % print_every == 0:
             print(f"Epoch {epoch+1} - Loss: {epoch_loss}")
 
     return dnn

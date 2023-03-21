@@ -17,13 +17,14 @@ def dataset_mapper(dataset, function):
     return dataset
 
 
-def train_DBN(dbn, num_iterations, learning_rate, batch_size, ds):
+def train_DBN(dbn, num_iterations, learning_rate, batch_size, ds, print_every=100):
     num_layers = len(dbn)
     for i in range(num_layers):
         print(f"Training RBM {i+1}")
         dbn[i] = train_RBM(dbn[i], epochs=num_iterations,
                            learning_rate=learning_rate,
-                           batch_size=batch_size, ds=ds)
+                           batch_size=batch_size, ds=ds,
+                           print_every=print_every)
         ds = dataset_mapper(ds, lambda x: entree_sortie_RBM(dbn[i], x))
     return dbn
 

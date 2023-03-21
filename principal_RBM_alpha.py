@@ -28,7 +28,8 @@ def sortie_entree_RBM(rbm, output):
     return input
 
 
-def train_RBM(rbm, epochs=2001, batch_size=4, learning_rate=1e-1, ds=BinaryAlphaDigitsDataset()):
+def train_RBM(rbm, epochs=2001, batch_size=4, learning_rate=1e-1, ds=BinaryAlphaDigitsDataset(),
+              print_every=100):
     for epoch in range(epochs):
         errors = []
         for batch in DataLoader(ds, batch_size=batch_size, shuffle=True, drop_last=True):
@@ -57,7 +58,7 @@ def train_RBM(rbm, epochs=2001, batch_size=4, learning_rate=1e-1, ds=BinaryAlpha
 
         errors = np.array(errors).mean()
 
-        if epoch % 100 == 0:
+        if epoch % print_every == 0:
             print(f"Epoch {epoch+1} - Reconstruction error: {errors}")
 
     return rbm
