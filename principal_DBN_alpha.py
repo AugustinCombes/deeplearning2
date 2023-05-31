@@ -1,12 +1,19 @@
 from principal_RBM_alpha import *
 
 
+def softmax(x):
+    return (np.exp(x).T / np.sum(np.exp(x), axis=1)).T
+
+
+def calcul_softmax(rbm, X):
+    return softmax(np.dot(X, rbm["W"]) + rbm["b"])
+
+
 def init_DBN(sizes):
     num_layers = len(sizes)
     dbn = []
     for i in range(num_layers-1):
-        rbm = init_RBM(sizes[i], sizes[i+1])
-        dbn.append(rbm)
+        dbn.append(init_RBM(sizes[i], sizes[i+1]))
     return dbn
 
 
@@ -31,7 +38,7 @@ def train_DBN(dbn, num_iterations, learning_rate, batch_size, ds, print_every=10
 
 def generer_image_DBN(dbn, num_iterations, num_images):
     for _ in range(num_images):
-        x = np.random.binomial(1, 0.5, size=dbn[0]['a'].shape[1])
+        x = np.random.binomial(1, 0.5, size=dbn[0]['a'].shape[0])
         for _ in range(num_iterations):
             for idx in range(len(dbn)):
                 rbm = dbn[idx]

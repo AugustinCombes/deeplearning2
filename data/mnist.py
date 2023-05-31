@@ -4,7 +4,7 @@ import torch
 
 
 class MNISTDataset(torch.utils.data.Dataset):
-    def __init__(self, path_documents='data/rawdata/mnist_all.mat', mode='train'):
+    def __init__(self, path_documents='data/rawdata/mnist_all.mat', mode='train', size=None):
 
         raw_data = scipy.io.loadmat(path_documents)
 
@@ -27,6 +27,11 @@ class MNISTDataset(torch.utils.data.Dataset):
         # Binarize data
         data[data <= 127] = 0
         data[data > 127] = 1
+
+        # Option to use only a subset of the data 
+        if size is not None : 
+            data = data[0:size, :, :]
+            labels = labels[0:size]
 
         self.data = data
         self.labels = labels
